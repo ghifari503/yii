@@ -142,6 +142,7 @@ class SiteController extends Controller
                                           <tr>
                                             <th>ID</th>
                                             <th>Tindakan</th>
+                                            <th>Obat</th>
                                             <th>Pengguna</th>
                                             <th>Opsi</th>
                                            </tr>
@@ -154,6 +155,13 @@ class SiteController extends Controller
                                               <tr>
                                                 <td><?php echo$k['id_tindakan']; ?></td>
                                                 <td><?php echo$k['nama_tindakan']; ?></td>
+                                                <td><?php 
+                                                   $data_obat = $k['id_obat'];
+                                                   $queryobat = $db->createCommand("SELECT * FROM obat WHERE id_obat = '$data_obat'")->query();
+                                                   foreach($queryobat as $key){
+                                                      echo$key['nama_obat'];
+                                                   }
+                                                ?></td>
                                                 <td><?php 
                                                    $data_pengguna = $k['id_pengguna'];
                                                    $querypengguna = $db->createCommand("SELECT * FROM pengguna WHERE id_pengguna = '$data_pengguna'")->query();
@@ -406,9 +414,18 @@ public function actionPembayaran()
     {
         ?>
 <form action="addw">
-        <div class="form-group">
+<div class="form-group">
             <label>Tindakan</label>
-            <input type="text" name="tindakan" placeholder="Tindakan" class="form-control">
+            <select name="tindakan" class="form-control">
+                <option value="0">Pilih</option>
+                <?php
+               $db = Yii::$app->db;
+               $query_tindakan = $db->createCommand("SELECT * FROM tindakan ORDER BY id_tindakan DESC")->query();
+               foreach($query_tindakan as $key){
+                 echo '<option value="'.$key['id_tindakan'].'">'.$key['nama_tindakan'].'</option>';  
+               }
+            ?>
+            </select>            
         </div>
         <div class="form-group">
             <label>Obat</label>
@@ -694,6 +711,7 @@ public function actionPembayaran()
                  ?>
             </select>
         </div>
+        
         <div class="form-group">
             <label>Nominal</label>
             <input type="number" name="nominal" placeholder="Nominal" class="form-control">
